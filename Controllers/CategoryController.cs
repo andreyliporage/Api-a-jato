@@ -12,14 +12,16 @@ namespace Shop.Controllers
     public class CategoryController : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<List<Category>>> Get() {
-            return new List<Category>();
+        public async Task<ActionResult<List<Category>>> Get([FromServices]DataContext context) {
+            var categories = await context.Categories.AsNoTracking().ToListAsync();
+            return Ok(categories);
         }
 
         [HttpGet]
         [Route("{id:int}")]
-        public async Task<ActionResult<Category>> GetById(int id) {
-            return new Category();
+        public async Task<ActionResult<Category>> GetById(int id, [FromServices]DataContext context) {
+            var category = await context.Categories.AsNoTracking().FirstOrDefaultAsync(cat => cat.Id == id);
+            return Ok(category);
         }
 
         [HttpPost]
