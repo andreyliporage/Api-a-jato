@@ -9,11 +9,12 @@ using Shop.Models;
 
 namespace Shop.Controllers
 {
-    [Route("categories")]
+    [Route("v1/categories")]
     public class CategoryController : ControllerBase
     {
         [HttpGet]
         [AllowAnonymous]
+        [ResponseCache(VaryByHeader = "User-Agent", Location = ResponseCacheLocation.Any, Duration = 30)]
         public async Task<ActionResult<List<Category>>> Get([FromServices]DataContext context) {
             var categories = await context.Categories.AsNoTracking().ToListAsync();
             return Ok(categories);
