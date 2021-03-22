@@ -54,7 +54,6 @@ namespace Shop
             services.AddDbContext<DataContext>(opt => opt.UseSqlServer(
                 Configuration.GetConnectionString("DefaultConnection")
             ));
-            services.AddScoped<DataContext, DataContext>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Shop", Version = "v1" });

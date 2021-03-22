@@ -34,8 +34,12 @@ namespace Shop.Controllers
 
             try
             {
+                model.Role = "employee";
+
                 context.Users.Add(model);
                 await context.SaveChangesAsync();
+
+                model.Password = "";
                 return model;
             }
             catch (Exception)
@@ -53,7 +57,7 @@ namespace Shop.Controllers
         {
             var user = await context.Users
                 .AsNoTracking()
-                .Where(x => x.username == model.username && x.Password == model.Password)
+                .Where(x => x.Username == model.Username && x.Password == model.Password)
                 .FirstOrDefaultAsync();
 
             if (user == null) return NotFound(new { message = "Usuário ou senha inválidos" });
