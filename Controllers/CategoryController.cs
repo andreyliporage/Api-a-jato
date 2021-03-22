@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shop.Data;
@@ -12,6 +13,7 @@ namespace Shop.Controllers
     public class CategoryController : ControllerBase
     {
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<List<Category>>> Get([FromServices]DataContext context) {
             var categories = await context.Categories.AsNoTracking().ToListAsync();
             return Ok(categories);
@@ -19,12 +21,14 @@ namespace Shop.Controllers
 
         [HttpGet]
         [Route("{id:int}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Category>> GetById(int id, [FromServices]DataContext context) {
             var category = await context.Categories.AsNoTracking().FirstOrDefaultAsync(cat => cat.Id == id);
             return Ok(category);
         }
 
         [HttpPost]
+        [Authorize(Roles = "employee")]
         public async Task<ActionResult<List<Category>>> Post([FromBody]Category model, [FromServices]DataContext context) {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
@@ -40,6 +44,7 @@ namespace Shop.Controllers
 
         [HttpPut]
         [Route("{id:int}")]
+        [Authorize(Roles = "employee")]
         public async Task<ActionResult<List<Category>>> Put(int id, [FromBody]Category model, [FromServices]DataContext context) {
             if (model.Id != id) return NotFound(new { message = "Categoria não encontrada" }); 
 
@@ -62,6 +67,7 @@ namespace Shop.Controllers
 
         [HttpDelete]
         [Route("{id}")]
+        [Authorize(Roles = "employee")]
         public async Task<ActionResult<List<Category>>> Delete(int id, [FromServices]DataContext context) {
             
             var categoria = await context.Categories.FirstOrDefaultAsync(cat => cat.Id == id);
